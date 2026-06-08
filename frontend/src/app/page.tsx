@@ -17,7 +17,7 @@ export default function HomePage() {
     setLoading(true);
     setError('');
     try {
-      const result = await getJobs(params);
+      const result = await getJobs({ status: 'open', ...params });
       setJobs(result.data);
     } catch {
       setError('Failed to load jobs');

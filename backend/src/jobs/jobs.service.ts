@@ -40,11 +40,9 @@ export class JobsService {
 
     const page = parseInt(query.page || '1', 10);
     const limit = parseInt(query.limit || '10', 10);
-    const filter: Record<string, unknown> = {};
-
-    if (query.status) {
-      filter.status = query.status;
-    }
+    const filter: Record<string, unknown> = {
+      status: query.status ?? JobStatus.OPEN,
+    };
 
     if (query.title) {
       filter.title = { $regex: query.title, $options: 'i' };
@@ -94,7 +92,10 @@ export class JobsService {
 
   async findByRecruiter(recruiterId: string) {
     return this.jobModel
-      .find({ recruiter: new Types.ObjectId(recruiterId) })
+      .find({
+        recruiter: new Types.ObjectId(recruiterId),
+        status: JobStatus.OPEN,
+      })
       .sort({ createdAt: -1 });
   }
 
